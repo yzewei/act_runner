@@ -1,0 +1,26 @@
+name: build 构建并推送镜像
+on:
+  - push
+  - pull_request
+
+jobs:
+  Explore-Gitea-Actions:
+    name: Build Affected Binaries
+    runs-on: host
+    defaults:
+      run:
+        shell: sh # 明确指定使用 sh
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: make docker
+
+      - name: Push
+        env:
+          LCR_LOGIN_NAME: ${{ secrets.LCR_LOGIN_NAME }}
+          LCR_LOGIN_PWD: ${{ secrets.LCR_LOGIN_PWD }}
+        run: | 
+          make push 
+
